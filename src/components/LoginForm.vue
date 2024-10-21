@@ -10,6 +10,10 @@
         <label for="password">Password:</label>
         <input type="password" v-model="password" required />
       </div>
+      <div class="input-group">
+        <label for="password">TelegramID:</label>
+        <input type="text" v-model="telegram_id" required />
+      </div>
       <button type="submit" class="submit-btn">{{ isLogin ? 'Login' : 'Register' }}</button>
     </form>
     <button @click="toggleForm" class="toggle-btn">{{ isLogin ? 'Register' : 'Login' }}</button>
@@ -24,6 +28,7 @@ export default {
     return {
       username: '',
       password: '',
+      telegram_id: '',
       isLogin: true,
     };
   },
@@ -34,6 +39,7 @@ export default {
         const response = await axios.post(`http://localhost:8000/api${endpoint}`, {
           username: this.username,
           password: this.password,
+          telegram_id: parseInt(this.telegram_id, 10)
         });
 
         if (this.isLogin) {
