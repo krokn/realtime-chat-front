@@ -10,8 +10,9 @@
         <label for="password">Password:</label>
         <input type="password" v-model="password" required />
       </div>
-      <div class="input-group">
-        <label for="password">TelegramID:</label>
+      <!-- Показываем поле TelegramID только при регистрации -->
+      <div class="input-group" v-if="!isLogin">
+        <label for="telegram_id">TelegramID:</label>
         <input type="text" v-model="telegram_id" required />
       </div>
       <button type="submit" class="submit-btn">{{ isLogin ? 'Login' : 'Register' }}</button>
@@ -36,11 +37,17 @@ export default {
     async submitForm() {
       try {
         const endpoint = this.isLogin ? '/auth/login' : '/auth/register';
-        const response = await axios.post(`http://localhost:8000/api${endpoint}`, {
+        const payload = {
           username: this.username,
           password: this.password,
-          telegram_id: parseInt(this.telegram_id, 10)
-        });
+        };
+
+        // Добавляем TelegramID только при регистрации
+        if (!this.isLogin) {
+          payload.telegram_id = parseInt(this.telegram_id, 10);
+        }
+
+        const response = await axios.post(`http://localhost:8000/api${endpoint}`, payload);
 
         if (this.isLogin) {
           const token = response.data.token;
