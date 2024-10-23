@@ -72,7 +72,7 @@ export default {
     },
   },
   mounted() {
-    this.$cookies.config('1h');
+    this.$cookies.config('6h');
   },
 };
 </script>
