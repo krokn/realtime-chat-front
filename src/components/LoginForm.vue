@@ -47,7 +47,7 @@ export default {
           payload.telegram_id = parseInt(this.telegram_id, 10);
         }
 
-        const response = await axios.post(`http://localhost:8000/api${endpoint}`, payload);
+        const response = await axios.post(`http://31.129.109.97:80/api${endpoint}`, payload);
 
         if (this.isLogin) {
           const token = response.data.token;

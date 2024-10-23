@@ -45,7 +45,7 @@ export default {
     },
     connectToWebSocket() {
       const token = this.$cookies.get('token');
-      this.socket = new WebSocket(`ws://localhost:8000/api/message/ws?token=${token}`);
+      this.socket = new WebSocket(`ws://31.129.109.97:80/api/message/ws?token=${token}`);
 
       this.socket.onmessage = (event) => {
         this.chatHistory.push(event.data);
