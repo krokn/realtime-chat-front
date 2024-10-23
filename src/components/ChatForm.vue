@@ -152,7 +152,7 @@ input[type="text"]:focus {
 }
 
 .message {
-  margin-bottom: 10px;
+  margin-bottom: 3px;
   display: flex;
 }
 
