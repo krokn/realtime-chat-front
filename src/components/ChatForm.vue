@@ -19,10 +19,18 @@
         </div>
       </div>
     </div>
+    <div class="users-list">
+      <h3>Registered Users</h3>
+      <ul>
+        <li v-for="user in users" :key="user.username">{{ user.username }}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -30,6 +38,7 @@ export default {
       message: '',
       socket: null,
       chatHistory: [],
+      users: []  // Список пользователей
     };
   },
   methods: {
@@ -55,9 +64,23 @@ export default {
         console.log('WebSocket closed');
       };
     },
+    fetchUsers() {
+      axios.get('http://31.129.109.97:80/api/user', {
+        headers: {
+          accept: 'application/json',
+        }
+      })
+      .then(response => {
+        this.users = response.data;
+      })
+      .catch(error => {
+        console.error("Error fetching users:", error);
+      });
+    }
   },
   mounted() {
     this.connectToWebSocket();
+    this.fetchUsers();  // Загружаем список пользователей при монтировании компонента
   },
   beforeUnmount() {
     if (this.socket) {
@@ -68,31 +91,53 @@ export default {
 </script>
 
 <style scoped>
-/* Фон на весь экран */
+/* Основной контейнер с более узкими размерами */
 .chat-container {
-  height: 100vh; /* Высота 100% от высоты экрана */
   display: flex;
   justify-content: center;
-  align-items: center;
-  background-color: #1a1a1a; /* Черный фон */
+  align-items: flex-start;
+  background-color: black; /* Устанавливаем черный фон */
+  height: 100vh; /* Высота на весь экран */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .chat {
-  max-width: 400px;
-  width: 100%;
-  margin: 0 auto;
+  width: 400px;
   padding: 20px;
-  background-color: #1a1a1a;
+  background-color: #1a1a1a; /* Темный фон для чата */
   color: #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-right: 20px;
+}
+
+.users-list {
+  width: 200px;
+  background-color: #2b2b2b; /* Темный фон для списка пользователей */
+  padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-h2 {
+h2, h3 {
   color: #a020f0;
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  padding: 10px;
+  border-bottom: 1px solid #444;
+  color: #e0e0e0;
+}
+
+li:last-child {
+  border-bottom: none;
 }
 
 .chat-form {
@@ -176,21 +221,18 @@ input[type="text"]:focus {
 }
 
 @media (max-width: 600px) {
+  .chat-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
   .chat {
-    max-width: 100%;
-    padding: 15px;
+    width: 100%;
   }
 
-  h2 {
-    font-size: 20px;
-  }
-
-  .chat-form {
-    gap: 10px;
-  }
-
-  .send-btn {
-    font-size: 16px;
+  .users-list {
+    width: 100%;
+    margin-top: 20px;
   }
 }
 </style>
